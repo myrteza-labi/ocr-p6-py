@@ -173,7 +173,6 @@ function closeModal() {
   modal.style.display = "none";
 }
 
-// Handling the Horror Movies "Voir plus/Voir moins" button
 const seeMoreHorrorButton = document.getElementById(
   "horror-movies-see-more-btn"
 );
@@ -187,3 +186,17 @@ const handleHorrorClick = () => {
 };
 
 seeMoreHorrorButton.addEventListener("click", handleHorrorClick);
+
+const seeMoreComedyButton = document.getElementById(
+  "comedy-movies-see-more-btn"
+);
+
+const handleComedyClick = () => {
+  const showAll = seeMoreComedyButton.innerHTML.includes("Voir plus");
+
+  seeMoreComedyButton.innerHTML = showAll ? "Voir moins" : "Voir plus";
+
+  fetchMoviesByCategory("Comedy", "category-2-container", showAll);
+};
+
+seeMoreComedyButton.addEventListener("click", handleComedyClick);
