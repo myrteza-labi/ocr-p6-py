@@ -1,46 +1,15 @@
 document.addEventListener("DOMContentLoaded", async function () {
   await fetchBestMovie();
+  await populateCategories();
 
-  async function fetchCategories() {
-    const fetchedCategories = [];
-    let url = "http://localhost:8000/api/v1/genres/";
-
-    while (url) {
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        // Ajouter les catégories récupérées à notre tableau
-        data.results.forEach((category) => {
-          fetchedCategories.push(category.name);
-        });
-
-        // Mettre à jour l'URL pour la prochaine page
-        url = data.next;
-      } catch (error) {
-        console.error("Erreur lors de la récupération des catégories :", error);
-        break;
+  document
+    .getElementById("categories")
+    .addEventListener("change", async function () {
+      const selectedCategory = this.value;
+      if (selectedCategory) {
+        await handleCategoryChange(selectedCategory);
       }
-    }
-
-    return fetchedCategories;
-  }
-
-  async function populateCategories() {
-    const selectCategoriesCtn = document.getElementById("categories");
-    const categories = await fetchCategories();
-
-    // Ajouter les catégories récupérées dans le <select>
-    categories.forEach((category) => {
-      const option = document.createElement("option");
-      option.value = category;
-      option.textContent = category;
-      selectCategoriesCtn.appendChild(option);
     });
-  }
-
-  // Appeler la fonction pour peupler les catégories
-  populateCategories();
 
   const categories = [
     {
@@ -99,6 +68,50 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
   });
 });
+
+async function handleCategoryChange(categoryName) {
+  const container = document.getElementById("free-category-container");
+  container.innerHTML = ""; // Vider le conteneur avant de charger les nouveaux films
+  await fetchMovies({
+    categoryName: categoryName,
+    containerId: "free-category-container",
+  });
+}
+
+async function fetchCategories() {
+  const fetchedCategories = [];
+  let url = "http://localhost:8000/api/v1/genres/";
+
+  while (url) {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      data.results.forEach((category) => {
+        fetchedCategories.push(category.name);
+      });
+
+      url = data.next;
+    } catch (error) {
+      console.error("Erreur lors de la récupération des catégories :", error);
+      break;
+    }
+  }
+
+  return fetchedCategories;
+}
+
+async function populateCategories() {
+  const selectCategoriesCtn = document.getElementById("categories");
+  const categories = await fetchCategories();
+
+  categories.forEach((category) => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    selectCategoriesCtn.appendChild(option);
+  });
+}
 
 const handleSeeMoreClick = (category) => {
   const seeMoreButton = document.getElementById(`${category.id}-see-more-btn`);
@@ -161,7 +174,7 @@ async function fetchBestMovie() {
 
 function displayMovies(movies, containerId) {
   const container = document.getElementById(containerId);
-  container.innerHTML = "";
+  container.innerHTML = ""; // Vider le conteneur avant d'ajouter les nouveaux films
   movies.forEach((movie) => {
     const movieElement = document.createElement("div");
     movieElement.className = "movie";
