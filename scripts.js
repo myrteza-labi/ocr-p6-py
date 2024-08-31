@@ -4,8 +4,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   try {
     await fetchBestMovie();
     await fetchTopRatedMovies();
-    await fetchMoviesByCategory("Action", "category-1-container");
-    await fetchMoviesByCategory("Adventure", "category-2-container");
+    await fetchMoviesByCategory("Horror", "category-1-container");
+    await fetchMoviesByCategory("Comedy", "category-2-container");
     document
       .getElementById("categories")
       .addEventListener("change", async function (event) {
@@ -25,8 +25,15 @@ function getWindowWidth() {
   return width;
 }
 
-// Appeler la fonction au chargement de la page
-displayWindowSize();
+const getDisplayNumber = () => {
+  if (getWindowWidth() < 767) {
+    return 2;
+  } else if (getWindowWidth() > 767 && getWindowWidth() < 959) {
+    return 4;
+  } else {
+    return 6;
+  }
+};
 
 async function fetchBestMovie() {
   try {
@@ -41,13 +48,22 @@ async function fetchBestMovie() {
   }
 }
 
+const handleBRMClick = () => {
+  seeMoreBRMButton.innerHTML.includes("Voir plus")
+    ? (seeMoreBRMButton.innerHTML = "Voir moins")
+    : (seeMoreBRMButton.innerHTML = "Voir plus");
+};
+
+const seeMoreBRMButton = document.getElementById("best-movies-see-more-btn");
+seeMoreBRMButton.addEventListener("click", handleBRMClick);
+
 async function fetchTopRatedMovies() {
   try {
     const response = await fetch(
       "http://localhost:8000/api/v1/titles/?sort_by=-imdb_score&page=1"
     );
     const data = await response.json();
-    const movies = data.results.slice(1, 7);
+    const movies = data.results.slice(0, getDisplayNumber());
     displayMovies(movies, "top-rated-movies-container");
   } catch (error) {
     console.error("Error fetching top rated movies:", error);
@@ -60,7 +76,7 @@ async function fetchMoviesByCategory(categoryName, containerId) {
       `http://localhost:8000/api/v1/titles/?genre=${categoryName}&sort_by=-imdb_score`
     );
     const data = await response.json();
-    const movies = data.results.slice(0, 6);
+    const movies = data.results.slice(0, getDisplayNumber());
     displayMovies(movies, containerId);
   } catch (error) {
     console.error(`Error fetching movies for category ${categoryName}:`, error);
