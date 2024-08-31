@@ -1,6 +1,47 @@
 document.addEventListener("DOMContentLoaded", async function () {
   await fetchBestMovie();
 
+  async function fetchCategories() {
+    const fetchedCategories = [];
+    let url = "http://localhost:8000/api/v1/genres/";
+
+    while (url) {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        // Ajouter les catégories récupérées à notre tableau
+        data.results.forEach((category) => {
+          fetchedCategories.push(category.name);
+        });
+
+        // Mettre à jour l'URL pour la prochaine page
+        url = data.next;
+      } catch (error) {
+        console.error("Erreur lors de la récupération des catégories :", error);
+        break;
+      }
+    }
+
+    return fetchedCategories;
+  }
+
+  async function populateCategories() {
+    const selectCategoriesCtn = document.getElementById("categories");
+    const categories = await fetchCategories();
+
+    // Ajouter les catégories récupérées dans le <select>
+    categories.forEach((category) => {
+      const option = document.createElement("option");
+      option.value = category;
+      option.textContent = category;
+      selectCategoriesCtn.appendChild(option);
+    });
+  }
+
+  // Appeler la fonction pour peupler les catégories
+  populateCategories();
+
   const categories = [
     {
       id: "top-rated-movies",
