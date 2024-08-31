@@ -1,3 +1,5 @@
+window.addEventListener("resize", getWindowWidth);
+
 document.addEventListener("DOMContentLoaded", async function () {
   try {
     await fetchBestMovie();
@@ -17,6 +19,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     console.error("Error during DOMContentLoaded event handling:", error);
   }
 });
+
+function getWindowWidth() {
+  const width = window.innerWidth;
+  return width;
+}
+
+// Appeler la fonction au chargement de la page
+displayWindowSize();
 
 async function fetchBestMovie() {
   try {
@@ -101,6 +111,7 @@ function displayMovies(movies, containerId) {
 }
 
 async function showMovieDetails(movieId) {
+  alert(getWindowWidth());
   try {
     const response = await fetch(
       `http://localhost:8000/api/v1/titles/${movieId}`
