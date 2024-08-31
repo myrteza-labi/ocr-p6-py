@@ -47,23 +47,29 @@ async function fetchBestMovie() {
     console.error("Error fetching best movie:", error);
   }
 }
+const seeMoreBRMButton = document.getElementById("best-movies-see-more-btn");
 
 const handleBRMClick = () => {
-  seeMoreBRMButton.innerHTML.includes("Voir plus")
-    ? (seeMoreBRMButton.innerHTML = "Voir moins")
-    : (seeMoreBRMButton.innerHTML = "Voir plus");
+  const showAll = seeMoreBRMButton.innerHTML.includes("Voir plus");
+
+  seeMoreBRMButton.innerHTML = showAll ? "Voir moins" : "Voir plus";
+
+  fetchTopRatedMovies(showAll);
 };
 
-const seeMoreBRMButton = document.getElementById("best-movies-see-more-btn");
 seeMoreBRMButton.addEventListener("click", handleBRMClick);
 
-async function fetchTopRatedMovies() {
+async function fetchTopRatedMovies(showAll = false) {
   try {
     const response = await fetch(
       "http://localhost:8000/api/v1/titles/?sort_by=-imdb_score&page=1"
     );
     const data = await response.json();
-    const movies = data.results.slice(0, getDisplayNumber());
+
+    const movies = showAll
+      ? data.results
+      : data.results.slice(0, getDisplayNumber());
+
     displayMovies(movies, "top-rated-movies-container");
   } catch (error) {
     console.error("Error fetching top rated movies:", error);
