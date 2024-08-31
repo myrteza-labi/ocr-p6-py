@@ -27,82 +27,22 @@
       <h2 class="text-center text-3xl font-oswald font-bold pb-[13px]">
         Meilleur Film
       </h2>
-      <section
-        class="w-full border-[6px] border-black p-[10px] mb-[40px]"
-        id="best-movie"
-      >
+      <section class="w-full border-[6px] border-black p-[10px] mb-[40px]" id="best-movie">
         <div id="best-movie-details"></div>
       </section>
+      <div id="sections-container"></div>
+    </main>
+    
 
-      <section id="top-rated-movies">
-        <h2 class="text-center text-3xl font-oswald font-bold pb-[13px]">
-          Films les Mieux Notés
-        </h2>
-        <div
-          class="movies-container flex flex-col gap-7"
-          id="top-rated-movies-container"
-        ></div>
-        <div
-          id="best-movies-see-more-btn-ctn"
-          class="mt-[20px] flex items-center justify-center"
-        >
-          <button
-            id="best-movies-see-more-btn"
-            class="w-[214px] h-[40px] font-oswald bg-[#FA0B0B] text-white rounded-3xl"
-          >
-            Voir plus
-          </button>
-        </div>
-      </section>
 
-      <section id="category-1">
-        <h2 class="text-center text-3xl font-oswald font-bold pb-[13px]">
-          Horror
-        </h2>
-        <div class="movies-container" id="category-1-container"></div>
-        <div
-          id="horror-movies-see-more-btn-ctn"
-          class="mt-[20px] flex items-center justify-center"
-        >
-          <button
-            id="horror-movies-see-more-btn"
-            class="w-[214px] h-[40px] font-oswald bg-[#FA0B0B] text-white rounded-3xl"
-          >
-            Voir plus
-          </button>
-        </div>
-      </section>
-
-      <section id="category-2">
-        <h2 class="text-center text-3xl font-oswald font-bold pb-[13px]">
-          Comedy
-        </h2>
-        <div class="movies-container" id="category-2-container"></div>
-        <div
-          id="comedy-movies-see-more-btn-ctn"
-          class="mt-[20px] flex items-center justify-center"
-        >
-          <button
-            id="comedy-movies-see-more-btn"
-            class="w-[214px] h-[40px] font-oswald bg-[#FA0B0B] text-white rounded-3xl"
-          >
-            Voir plus
-          </button>
-        </div>
-      </section>
-
-      <section id="free-category">
-        <h2>Catégorie Libre</h2>
-        <div id="category-selector">
-          <label for="categories">Choisissez une catégorie :</label>
-          <select id="categories">
+      <section id="free-category" class="mt-[50px] mb-[500px] border-[2px] border-black h-[68px]">
+          <select id="categories" class="min-w-full min-h-full text-center text-3xl font-oswald font-bold">
             <option value="Action">Action</option>
             <option value="Adult">Adult</option>
             <option value="Adventure">Adventure</option>
             <option value="Animation">Animation</option>
             <option value="Biography">Biography</option>
           </select>
-        </div>
         <div class="movies-container" id="free-category-container"></div>
       </section>
     </main>
