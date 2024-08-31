@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     await fetchTopRatedMovies();
     await fetchMoviesByCategory("Horror", "category-1-container");
     await fetchMoviesByCategory("Comedy", "category-2-container");
+
     document
       .getElementById("categories")
       .addEventListener("change", async function (event) {
@@ -47,6 +48,7 @@ async function fetchBestMovie() {
     console.error("Error fetching best movie:", error);
   }
 }
+
 const seeMoreBRMButton = document.getElementById("best-movies-see-more-btn");
 
 const handleBRMClick = () => {
@@ -76,13 +78,19 @@ async function fetchTopRatedMovies(showAll = false) {
   }
 }
 
-async function fetchMoviesByCategory(categoryName, containerId) {
+async function fetchMoviesByCategory(
+  categoryName,
+  containerId,
+  showAll = false
+) {
   try {
     const response = await fetch(
       `http://localhost:8000/api/v1/titles/?genre=${categoryName}&sort_by=-imdb_score`
     );
     const data = await response.json();
-    const movies = data.results.slice(0, getDisplayNumber());
+    const movies = showAll
+      ? data.results
+      : data.results.slice(0, getDisplayNumber());
     displayMovies(movies, containerId);
   } catch (error) {
     console.error(`Error fetching movies for category ${categoryName}:`, error);
@@ -164,3 +172,31 @@ function closeModal() {
   const modal = document.getElementById("modal");
   modal.style.display = "none";
 }
+
+const seeMoreHorrorButton = document.getElementById(
+  "horror-movies-see-more-btn"
+);
+
+const handleHorrorClick = () => {
+  const showAll = seeMoreHorrorButton.innerHTML.includes("Voir plus");
+
+  seeMoreHorrorButton.innerHTML = showAll ? "Voir moins" : "Voir plus";
+
+  fetchMoviesByCategory("Horror", "category-1-container", showAll);
+};
+
+seeMoreHorrorButton.addEventListener("click", handleHorrorClick);
+
+const seeMoreComedyButton = document.getElementById(
+  "comedy-movies-see-more-btn"
+);
+
+const handleComedyClick = () => {
+  const showAll = seeMoreComedyButton.innerHTML.includes("Voir plus");
+
+  seeMoreComedyButton.innerHTML = showAll ? "Voir moins" : "Voir plus";
+
+  fetchMoviesByCategory("Comedy", "category-2-container", showAll);
+};
+
+seeMoreComedyButton.addEventListener("click", handleComedyClick);
