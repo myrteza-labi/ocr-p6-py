@@ -71,12 +71,62 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 async function handleCategoryChange(categoryName) {
   const container = document.getElementById("free-category-container");
-  container.innerHTML = ""; // Vider le conteneur avant de charger les nouveaux films
+  container.innerHTML = "";
   await fetchMovies({
     categoryName: categoryName,
     containerId: "free-category-container",
   });
+
+  let seeMoreButtonContainer = document.getElementById(
+    "free-category-see-more-btn-ctn"
+  );
+
+  if (!seeMoreButtonContainer) {
+    seeMoreButtonContainer = document.createElement("div");
+    seeMoreButtonContainer.className =
+      "mt-[20px] flex items-center justify-center";
+    seeMoreButtonContainer.id = "free-category-see-more-btn-ctn";
+    container.parentNode.appendChild(seeMoreButtonContainer);
+  }
+
+  seeMoreButtonContainer.innerHTML = `
+    <button
+      id="free-category-see-more-btn"
+      class="w-[214px] h-[40px] font-oswald bg-[#FA0B0B] text-white rounded-3xl"
+    >
+      Voir plus
+    </button>
+  `;
+
+  const seeMoreButton = document.getElementById("free-category-see-more-btn");
+  seeMoreButton.addEventListener("click", () =>
+    handleSeeMoreClick({
+      categoryName: categoryName,
+      containerId: "free-category-container",
+    })
+  );
 }
+
+const handleSeeMoreClick = async (category) => {
+  const seeMoreButton =
+    document.getElementById(`${category.containerId}-see-more-btn`) ||
+    document.getElementById("free-category-see-more-btn");
+
+  if (!seeMoreButton) {
+    console.error("Bouton 'Voir plus' introuvable pour:", category.containerId);
+    return;
+  }
+
+  const showAll = seeMoreButton.innerHTML.includes("Voir plus");
+
+  seeMoreButton.innerHTML = showAll ? "Voir moins" : "Voir plus";
+
+  await fetchMovies({
+    categoryName: category.categoryName,
+    containerId: category.containerId,
+    showAll: showAll,
+  });
+};
 
 async function fetchCategories() {
   const fetchedCategories = [];
@@ -112,20 +162,6 @@ async function populateCategories() {
     selectCategoriesCtn.appendChild(option);
   });
 }
-
-const handleSeeMoreClick = (category) => {
-  const seeMoreButton = document.getElementById(`${category.id}-see-more-btn`);
-  const showAll = seeMoreButton.innerHTML.includes("Voir plus");
-
-  seeMoreButton.innerHTML = showAll ? "Voir moins" : "Voir plus";
-
-  fetchMovies({
-    categoryName: category.categoryName,
-    containerId: category.containerId,
-    showAll: showAll,
-    isTopRated: category.isTopRated,
-  });
-};
 
 async function fetchMovies({
   categoryName = "",
