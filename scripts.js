@@ -108,9 +108,9 @@ async function handleCategoryChange(categoryName) {
 }
 
 const handleSeeMoreClick = async (category) => {
-  const seeMoreButton =
-    document.getElementById(`${category.containerId}-see-more-btn`) ||
-    document.getElementById("free-category-see-more-btn");
+  const seeMoreButton = document.getElementById(`${category.id}-see-more-btn`);
+  console.log("ID du bouton :", `${category.id}-see-more-btn`);
+  console.log("Bouton trouvé :", seeMoreButton);
 
   if (!seeMoreButton) {
     console.error("Bouton 'Voir plus' introuvable pour:", category.containerId);
