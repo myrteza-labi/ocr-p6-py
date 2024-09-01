@@ -239,7 +239,7 @@ async function displayBestMovie(movie) {
       <p class="lg:text-[28px] font-oswald font-extralight">${movie.description}</p>
     </div>
     <div class="mt-[20px] flex items-center justify-center md:items-end">
-      <button class="lg:text-xl w-[90px] lg:w-[166px] h-[70px] lg:h-[68px] font-oswald bg-[#FA0B0B] text-white rounded-3xl" onclick="showMovieDetails(${movie.id})">Détails</button>
+      <button class="lg:text-xl w-[90px] lg:w-[166px] h-[40px] lg:h-[68px] font-oswald bg-[#FA0B0B] text-white rounded-3xl" onclick="showMovieDetails(${movie.id})">Détails</button>
     </div>
   `;
 }
