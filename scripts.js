@@ -210,7 +210,7 @@ async function fetchBestMovie() {
 
 function displayMovies(movies, containerId) {
   const container = document.getElementById(containerId);
-  container.innerHTML = ""; // Vider le conteneur avant d'ajouter les nouveaux films
+  container.innerHTML = "";
   movies.forEach((movie) => {
     const movieElement = document.createElement("div");
     movieElement.className = "movie";
