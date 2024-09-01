@@ -250,20 +250,30 @@ async function showMovieDetails(movieId) {
     const movie = await response.json();
     const modal = document.getElementById("modal");
     modal.innerHTML = `
-      <img src="${movie.image_url}" alt="${movie.title}">
-      <h3>${movie.title}</h3>
-      <p>Genre: ${movie.genres.join(", ")}</p>
-      <p>Date de sortie: ${movie.year}</p>
-      <p>IMDB Score: ${movie.imdb_score}</p>
-      <p>Réalisateur: ${movie.directors.join(", ")}</p>
-      <p>Acteurs: ${movie.actors.join(", ")}</p>
-      <p>Durée: ${movie.duration} minutes</p>
-      <p>Pays: ${movie.country}</p>
-      <p>Recettes: ${movie.worldwide_gross_income}</p>
-      <p>${movie.description}</p>
-      <button onclick="closeModal()">Fermer</button>
+      <h2 class="text-3xl font-oswald font-bold pb-[6px]">
+        ${movie.title}
+      </h2>
+      <div class="mb-[30px]">
+        <p class="font-bold">${movie.year} - ${movie.genres.join(", ")}</p>
+        <p class="font-bold">IMBD score: ${movie.imdb_score}/10</p>
+      </div>
+
+      <p class="font-medium">Réalisé par:</p>
+      <p class="mb-[15px] font-extralight">${movie.directors.join(", ")}</p>
+
+      <p class="mb-[25px] font-extralight">${movie.description}</p>
+
+      <img class="w-full" src="${movie.image_url}" alt="${movie.title}">
+
+      <p class="font-medium mt-[20px]">Avec:</p>
+      <p class="font-extralight">${movie.actors.join(", ")}</p>
+
+      <button class="absolute top-[30px] right-[30px]" onclick="closeModal()">
+        <img width="30px" height="30px" src="src/close.png" alt="Bouton fermer"/>
+      </button>
     `;
-    modal.style.display = "block";
+    document.body.classList.add("overflow-hidden");
+    modal.classList.remove("hidden");
   } catch (error) {
     console.error("Error fetching movie details:", error);
   }
@@ -271,7 +281,8 @@ async function showMovieDetails(movieId) {
 
 function closeModal() {
   const modal = document.getElementById("modal");
-  modal.style.display = "none";
+  modal.classList.add("hidden");
+  document.body.classList.remove("overflow-hidden");
 }
 
 function getDisplayNumber() {
