@@ -36,8 +36,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   categories.forEach(async (category) => {
     const sectionHTML = `
-      <section id="${category.id}">
-        <h2 class="text-center text-3xl font-oswald font-bold pb-[13px]">
+      <section class="lg:mb-[50px]" id="${category.id}">
+        <h2 class="lg:text-[48px] lg:my-[40px] text-center text-3xl font-oswald font-bold pb-[13px]">
           ${category.title}
         </h2>
         <div class="movies-container md:flex md:flex-wrap md:justify-between" id="${category.containerId}"></div>
@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         >
           <button
             id="${category.id}-see-more-btn"
-            class="w-[214px] h-[40px] font-oswald bg-[#FA0B0B] text-white rounded-3xl md:mb-[30px]"
+            class="lg:hidden w-[214px] h-[40px] font-oswald bg-[#FA0B0B] text-white rounded-3xl md:mb-[30px]"
           >
             Voir plus
           </button>
@@ -92,7 +92,7 @@ async function handleCategoryChange(categoryName) {
   seeMoreButtonContainer.innerHTML = `
     <button
       id="free-category-see-more-btn"
-      class="w-[214px] h-[40px] font-oswald bg-[#FA0B0B] text-white rounded-3xl"
+      class="lg:hidden w-[214px] h-[40px] font-oswald bg-[#FA0B0B] text-white rounded-3xl"
     >
       Voir plus
     </button>
@@ -235,11 +235,11 @@ async function displayBestMovie(movie) {
   bestMovieContainer.innerHTML = `
     <img class="md:w-auto md:h-auto w-full h-[280px]" src="${movie.image_url}" alt="${movie.title}">
     <div class="md:ml-[30px]">
-      <h3 class="text-3xl font-semibold my-[8px] mt-[12px] font-oswald">${movie.title}</h3>
-      <p class="font-oswald font-extralight">${movie.description}</p>
+      <h3 class="text-3xl lg:text-[48px] font-semibold my-[8px] mt-[12px] font-oswald">${movie.title}</h3>
+      <p class="lg:text-[28px] font-oswald font-extralight">${movie.description}</p>
     </div>
     <div class="mt-[20px] flex items-center justify-center md:items-end">
-      <button class="w-[90px] h-[40px] font-oswald bg-[#FA0B0B] text-white rounded-3xl" onclick="showMovieDetails(${movie.id})">Détails</button>
+      <button class="lg:text-xl w-[90px] lg:w-[166px] h-[70px] lg:h-[68px] font-oswald bg-[#FA0B0B] text-white rounded-3xl" onclick="showMovieDetails(${movie.id})">Détails</button>
     </div>
   `;
 }
@@ -252,27 +252,45 @@ async function showMovieDetails(movieId) {
     const movie = await response.json();
     const modal = document.getElementById("modal");
     modal.innerHTML = `
-      <h2 class="text-3xl font-oswald font-bold pb-[6px]">
+      <h2 class="lg:text-[48px] text-3xl font-oswald font-bold pb-[6px]">
         ${movie.title}
       </h2>
-      <div class="mb-[30px]">
+      <div class="lg:text-[26px] mb-[30px]">
         <p class="font-bold">${movie.year} - ${movie.genres.join(", ")}</p>
         <p class="font-bold">IMBD score: ${movie.imdb_score}/10</p>
       </div>
 
-      <p class="font-medium">Réalisé par:</p>
-      <p class="mb-[15px] font-extralight">${movie.directors.join(", ")}</p>
+      <p class="lg:text-[26px] font-medium">Réalisé par:</p>
+      <p class="lg:text-[26px] mb-[15px] font-extralight">${movie.directors.join(
+        ", "
+      )}</p>
 
-      <p class="mb-[25px] font-extralight">${movie.description}</p>
+      <p class="lg:hidden mb-[25px] font-extralight">${movie.description}</p>
 
-      <img class="w-full" src="${movie.image_url}" alt="${movie.title}">
+      <img class="lg:w-[227px] lg:fixed lg:top-[25px] lg:right-[25px] w-full" src="${
+        movie.image_url
+      }" alt="${movie.title}">
 
-      <p class="font-medium mt-[20px]">Avec:</p>
-      <p class="font-extralight">${movie.actors.join(", ")}</p>
+      <p class="lg:text-[26px] lg:mt-[120px] font-medium mt-[20px]">Avec:</p>
+      <p class="lg:mb-[75px] lg:text-[26px] font-extralight">${movie.actors.join(
+        ", "
+      )}</p>
 
-      <button class="absolute top-[30px] right-[30px]" onclick="closeModal()">
+      <p class="hidden lg:block lg:text-[26px] mb-[25px] font-extralight">${
+        movie.description
+      }</p>
+
+      <button class="lg:hidden absolute top-[30px] right-[30px]" onclick="closeModal()">
         <img width="30px" height="30px" src="src/close.png" alt="Bouton fermer"/>
       </button>
+
+      <div class="lg:absolute lg:bottom-0 lg:left-0 lg:right-0 lg:flex lg:justify-center lg:pb-[20px]">
+        <button id="free-category-see-more-btn" onclick="closeModal()"
+        class="text-[26px] w-[214px] h-[40px] font-oswald bg-[#FA0B0B] text-white rounded-3xl"
+        >
+          Fermer
+        </button>
+      </div>
     `;
     document.body.classList.add("overflow-hidden");
     modal.classList.remove("hidden");
