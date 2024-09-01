@@ -40,14 +40,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         <h2 class="text-center text-3xl font-oswald font-bold pb-[13px]">
           ${category.title}
         </h2>
-        <div class="movies-container" id="${category.containerId}"></div>
+        <div class="movies-container md:flex md:flex-wrap md:justify-between" id="${category.containerId}"></div>
         <div
           id="${category.id}-see-more-btn-ctn"
           class="mt-[20px] flex items-center justify-center"
         >
           <button
             id="${category.id}-see-more-btn"
-            class="w-[214px] h-[40px] font-oswald bg-[#FA0B0B] text-white rounded-3xl"
+            class="w-[214px] h-[40px] font-oswald bg-[#FA0B0B] text-white rounded-3xl md:mb-[30px]"
           >
             Voir plus
           </button>
@@ -215,7 +215,7 @@ function displayMovies(movies, containerId) {
     const movieElement = document.createElement("div");
     movieElement.className = "movie";
     movieElement.innerHTML = `
-      <div class="relative mb-[50px]">
+      <div class="relative mb-[50px] md:w-[350px] md:h-[285px]">
         <div class="w-full absolute h-[130px] bg-black bg-opacity-50 mt-[42px]">
           <p class="text-white font-oswald font-semibold text-2xl mt-[25px] ml-[30px]">${movie.title}</p>
           <div class="flex items-right justify-end pr-[20px] mt-[20px]">
