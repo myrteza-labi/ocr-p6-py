@@ -233,10 +233,12 @@ function displayMovies(movies, containerId) {
 async function displayBestMovie(movie) {
   const bestMovieContainer = document.getElementById("best-movie-details");
   bestMovieContainer.innerHTML = `
-    <img class="w-full h-[280px]" src="${movie.image_url}" alt="${movie.title}">
-    <h3 class="text-3xl font-semibold my-[8px] mt-[12px] font-oswald">${movie.title}</h3>
-    <p class="font-oswald font-extralight">${movie.description}</p>
-    <div class="mt-[20px] flex items-center justify-center">
+    <img class="md:w-auto md:h-auto w-full h-[280px]" src="${movie.image_url}" alt="${movie.title}">
+    <div class="md:ml-[30px]">
+      <h3 class="text-3xl font-semibold my-[8px] mt-[12px] font-oswald">${movie.title}</h3>
+      <p class="font-oswald font-extralight">${movie.description}</p>
+    </div>
+    <div class="mt-[20px] flex items-center justify-center md:items-end">
       <button class="w-[90px] h-[40px] font-oswald bg-[#FA0B0B] text-white rounded-3xl" onclick="showMovieDetails(${movie.id})">Détails</button>
     </div>
   `;
