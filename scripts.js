@@ -67,7 +67,62 @@ document.addEventListener("DOMContentLoaded", async function () {
       isTopRated: category.isTopRated,
     });
   });
+
+  window.addEventListener("resize", adjustMovieDisplay);
+
+  function adjustMovieDisplay() {
+    categories.forEach((category) => {
+      const container = document.getElementById(category.containerId);
+      const movies = container.querySelectorAll(".movie");
+      const displayNumber = getDisplayNumber();
+
+      movies.forEach((movie, index) => {
+        if (index < displayNumber) {
+          movie.style.display = "block";
+        } else {
+          movie.style.display = "none";
+        }
+      });
+
+      const seeMoreButton = document.getElementById(
+        `${category.id}-see-more-btn`
+      );
+      if (movies.length > displayNumber) {
+        seeMoreButton.style.display = "block";
+        seeMoreButton.innerHTML = "Voir plus";
+      } else {
+        seeMoreButton.style.display = "none";
+      }
+    });
+  }
+
+  adjustMovieDisplay();
 });
+
+function displayMovies(movies, containerId) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = "";
+  movies.forEach((movie, index) => {
+    const movieElement = document.createElement("div");
+    movieElement.className = "movie";
+    movieElement.setAttribute("data-index", index);
+    movieElement.innerHTML = `
+      <div class="relative mb-[50px] md:w-[350px] md:h-[285px]">
+        <div class="w-full absolute h-[130px] bg-black bg-opacity-50 mt-[42px]">
+          <p class="text-white font-oswald font-semibold text-2xl mt-[25px] ml-[30px]">${movie.title}</p>
+          <div class="flex items-right justify-end pr-[20px] mt-[20px]">
+            <button class="bg-[#2D2C2C] font-light h-[32px] min-h-[32px] text-sm w-[105px] min-w-[105px] rounded-3xl text-white font-oswald">Détails</button>
+          </div>
+        </div>
+        <img class="w-full max-h-[318px]" src="${movie.image_url}" alt="${movie.title}">
+      </div>
+    `;
+    movieElement.addEventListener("click", () => showMovieDetails(movie.id));
+    container.appendChild(movieElement);
+  });
+
+  adjustMovieDisplay();
+}
 
 async function handleCategoryChange(categoryName) {
   const container = document.getElementById("free-category-container");
@@ -109,23 +164,25 @@ async function handleCategoryChange(categoryName) {
 
 const handleSeeMoreClick = async (category) => {
   const seeMoreButton = document.getElementById(`${category.id}-see-more-btn`);
-  console.log("ID du bouton :", `${category.id}-see-more-btn`);
-  console.log("Bouton trouvé :", seeMoreButton);
+  const container = document.getElementById(category.containerId);
+  const movies = container.querySelectorAll(".movie");
+  const displayNumber = getDisplayNumber();
 
-  if (!seeMoreButton) {
-    console.error("Bouton 'Voir plus' introuvable pour:", category.containerId);
-    return;
+  if (seeMoreButton.innerHTML === "Voir plus") {
+    movies.forEach((movie) => {
+      movie.style.display = "block";
+    });
+    seeMoreButton.innerHTML = "Voir moins";
+  } else {
+    movies.forEach((movie, index) => {
+      if (index < displayNumber) {
+        movie.style.display = "block";
+      } else {
+        movie.style.display = "none";
+      }
+    });
+    seeMoreButton.innerHTML = "Voir plus";
   }
-
-  const showAll = seeMoreButton.innerHTML.includes("Voir plus");
-
-  seeMoreButton.innerHTML = showAll ? "Voir moins" : "Voir plus";
-
-  await fetchMovies({
-    categoryName: category.categoryName,
-    containerId: category.containerId,
-    showAll: showAll,
-  });
 };
 
 async function fetchCategories() {
@@ -181,10 +238,7 @@ async function fetchMovies({
     const response = await fetch(url);
     const data = await response.json();
 
-    const movies = showAll
-      ? data.results
-      : data.results.slice(0, getDisplayNumber());
-    displayMovies(movies, containerId);
+    displayMovies(data.results, containerId);
   } catch (error) {
     console.error(`Error fetching movies:`, error);
   }
@@ -208,29 +262,7 @@ async function fetchBestMovie() {
   }
 }
 
-function displayMovies(movies, containerId) {
-  const container = document.getElementById(containerId);
-  container.innerHTML = "";
-  movies.forEach((movie) => {
-    const movieElement = document.createElement("div");
-    movieElement.className = "movie";
-    movieElement.innerHTML = `
-      <div class="relative mb-[50px] md:w-[350px] md:h-[285px]">
-        <div class="w-full absolute h-[130px] bg-black bg-opacity-50 mt-[42px]">
-          <p class="text-white font-oswald font-semibold text-2xl mt-[25px] ml-[30px]">${movie.title}</p>
-          <div class="flex items-right justify-end pr-[20px] mt-[20px]">
-            <button class="bg-[#2D2C2C] font-light h-[32px] min-h-[32px] text-sm w-[105px] min-w-[105px] rounded-3xl text-white font-oswald">Détails</button>
-          </div>
-        </div>
-        <img class="w-full max-h-[318px]" src="${movie.image_url}" alt="${movie.title}">
-      </div>
-    `;
-    movieElement.addEventListener("click", () => showMovieDetails(movie.id));
-    container.appendChild(movieElement);
-  });
-}
-
-async function displayBestMovie(movie) {
+function displayBestMovie(movie) {
   const bestMovieContainer = document.getElementById("best-movie-details");
   bestMovieContainer.innerHTML = `
     <img class="md:w-auto md:h-auto w-full h-[280px]" src="${movie.image_url}" alt="${movie.title}">
@@ -309,7 +341,7 @@ function getDisplayNumber() {
   const width = window.innerWidth;
   if (width < 767) {
     return 2;
-  } else if (width > 767 && width < 959) {
+  } else if (width >= 767 && width < 959) {
     return 4;
   } else {
     return 6;
